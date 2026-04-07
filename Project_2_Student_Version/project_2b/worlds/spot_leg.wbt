@@ -1,0 +1,70 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/ThreadMetalPlate.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Roughcast.proto"
+EXTERNPROTO "../protos/SpotLeg.proto"
+
+WorldInfo {
+  info [
+    "Simulation of Boston Dynamics' Spot robot in a simple industrial environment."
+    "The robot is saying hello with its right leg."
+  ]
+  title "Spot Robot demo"
+}
+Viewpoint {
+  orientation -0.004593467603796004 -0.019680856742645053 -0.9997957611098621 0.4592912374371939
+  position -2.519906892780531 0.6258559706295834 1.1101566733547577
+  followType "None"
+  followSmoothness 0
+}
+TexturedBackground {
+  texture "factory"
+  skybox FALSE
+}
+TexturedBackgroundLight {
+  texture "factory"
+}
+RectangleArena {
+  floorSize 10 10
+  floorAppearance ThreadMetalPlate {
+    textureTransform TextureTransform {
+      scale 0.7 0.7
+    }
+  }
+  wallThickness 0.1
+  wallHeight 3.4
+  wallAppearance Roughcast {
+    colorOverride 0.662745 0.662745 0.662745
+    textureTransform TextureTransform {
+      scale 10 10
+    }
+  }
+}
+SpotLeg {
+  hidden position_0_0 -5.599560080967551e-09
+  hidden position_1_0 4.181976416194158e-06
+  hidden rotation_2 1 0 0 4.181999672683098e-06
+  hidden position_2_1 3.4954705520729386e-07
+  hidden rotation_4 1 0 0 3.5009801758738595e-07
+  translation 0 0 0.83
+  controller "Spot_Leg_Kinematics"
+  supervisor TRUE
+}
+DEF TARGET_CUBE Solid {
+  translation 0 -0.55 0.8
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 1 0
+        transparency 0.2
+      }
+      geometry Box {
+        size 0.08 0.08 0.08
+      }
+    }
+  ]
+  name "TARGET_CUBE"
+}

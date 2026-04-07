@@ -1,0 +1,17 @@
+name: amr_p2
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - ipykernel
+  - numpy
+  - matplotlib
+  - pyqt
+  - pytest
+  - rosbags
+  - pandas
+  - plotly
+  - nbformat
+  - pip:
+      - gtsam-develop
