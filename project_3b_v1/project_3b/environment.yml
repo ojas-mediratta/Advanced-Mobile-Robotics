@@ -1,0 +1,16 @@
+name: amr_p3b
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - ipykernel
+  - jupyter
+  - numpy==1.26.4
+  - scipy==1.10.1
+  - matplotlib
+  - matplotlib-inline<0.2
+  - cvxopt
+  - pyqt
+  - pytest
+  - gtsam=4.2

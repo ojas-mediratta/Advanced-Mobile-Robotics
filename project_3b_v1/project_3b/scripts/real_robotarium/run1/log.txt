@@ -1,0 +1,32 @@
+/usr/local/lib/python3.10/dist-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "
+[INFO] [1775160531.218428863] [robotarium]: BARRIER DEADLOCK DURING INITIALIZATION CREATING RANDOM POINT TO ALLEVIATE!
+[INFO] [1775160534.897798594] [robotarium]: BARRIER DEADLOCK DURING INITIALIZATION CREATING RANDOM POINT TO ALLEVIATE!
+[INFO] [1775160538.598171262] [robotarium]: BARRIER DEADLOCK DURING INITIALIZATION CREATING RANDOM POINT TO ALLEVIATE!
+[INFO] [1775160540.309021561] [robotarium]: BARRIER DEADLOCK DURING INITIALIZATION CREATING RANDOM POINT TO ALLEVIATE!
+[INFO] [1775160559.289061902] [robotarium]: Starting Experiment
+= Experiment Config =
+seed = 1386502419
+forward_speed = 0.173
+turn_omega = 1.731
+detect_dist = 0.275
+turn_steps_range = (10, 49)
+[step    0/6000] keyframes=1, range_edges=0, elapsed=0.0s
+[step  500/6000] keyframes=17, range_edges=18, elapsed=16.7s
+[step 1000/6000] keyframes=34, range_edges=57, elapsed=33.4s
+[step 1500/6000] keyframes=51, range_edges=92, elapsed=50.0s
+[step 2000/6000] keyframes=67, range_edges=153, elapsed=66.7s
+[step 2500/6000] keyframes=84, range_edges=236, elapsed=83.3s
+[step 3000/6000] keyframes=101, range_edges=287, elapsed=100.0s
+[step 3500/6000] keyframes=117, range_edges=311, elapsed=116.6s
+[step 4000/6000] keyframes=134, range_edges=332, elapsed=133.3s
+[step 4500/6000] keyframes=151, range_edges=440, elapsed=149.9s
+[step 5000/6000] keyframes=167, range_edges=519, elapsed=166.6s
+[step 5500/6000] keyframes=184, range_edges=571, elapsed=183.3s
+
+= EXPERIMENT COMPLETE =
+Total steps: 6000
+Keyframes: 200
+Range edges: 643
+Wall-clock time: 199.9s
+Saved: gt_poses.npy, encoder_data.npy, lidar_scans.npy, keyframe_steps.npy, range_edges.npy, initial_poses.npy

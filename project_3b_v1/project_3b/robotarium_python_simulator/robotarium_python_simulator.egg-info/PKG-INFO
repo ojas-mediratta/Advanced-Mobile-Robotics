@@ -1,0 +1,29 @@
+Metadata-Version: 2.4
+Name: robotarium_python_simulator
+Version: 2.0.0
+Summary: A Python-based simulator for the Robotarium.
+Home-page: https://github.com/robotarium/robotarium_python_simulator
+Author: Sean Wilson and Paul Glotfelter
+Author-email: Sean.T.Wilson@gatech.edu
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Requires-Dist: cvxopt
+Requires-Dist: scipy
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: summary
+
+
+# Robotarium Python Simulator
+
+Bundled with P3b for local simulation. See the main project README for setup instructions.

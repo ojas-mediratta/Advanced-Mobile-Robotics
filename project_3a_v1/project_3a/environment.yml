@@ -1,0 +1,18 @@
+name: amr_p3a
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - ipykernel
+  - jupyter
+  - numpy==1.26.4    
+  - scipy==1.10.1    
+  - matplotlib
+  - matplotlib-inline<0.2 # >=0.2 calls rcParams._get() which doesn't exist in mpl 3.5
+  - cvxopt
+  - pyqt
+  - pytest
+  - rosbags
+  - pip:
+      - gtsam-develop
