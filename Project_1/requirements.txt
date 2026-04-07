@@ -1,0 +1,3 @@
+plotly
+gtsam-develop
+kaleido==0.2.1
