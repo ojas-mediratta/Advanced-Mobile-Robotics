@@ -1,14 +1,15 @@
 name: amr_p4a
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python=3.11
   - pip
+  - ipykernel
   - numpy
   - scipy
   - matplotlib
   - jupyter
+  - pytest
+  - gtsam=4.2
   - pip:
-    - gtsam-develop 
     - rosbags

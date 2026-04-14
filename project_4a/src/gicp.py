@@ -93,7 +93,13 @@ def compute_covariance_matrix_single_point(
     HINT: Use the diag_cov np.ndarray already defined for you at the top of the file.
     """
     # ------- start solution ---------------------------------
-    raise NotImplementedError("Implement compute_covariance_matrix_single_point() in gicp.py")
+    neighbors = np.asarray(neighbors, dtype=float)
+
+    normal_cov = np.cov(neighbors, rowvar=False)
+    _, eigen_vectors = np.linalg.eigh(normal_cov)
+
+    covariance = eigen_vectors @ diag_cov @ eigen_vectors.T
+    return covariance
     # ------- end solution -----------------------------------
 
 
@@ -139,7 +145,14 @@ def transform_covariances(covariances: np.ndarray, transform: gtsam.Pose3) -> np
     HINT: How do you transform a covariance matrix from one frame to another?
     """
     # ------- start solution ---------------------------------
-    raise NotImplementedError("Implement transform_covariance() in gicp.py")
+    rotation = transform.rotation().matrix()
+    new_covariances = np.zeros_like(covariances)
+
+    for i in range(len(covariances)):
+        # rotate cov
+        new_covariances[i] = rotation @ covariances[i] @ rotation.T
+
+    return new_covariances
     # ------- end solution -----------------------------------
 
 
@@ -188,7 +201,17 @@ def build_information_matrices(
     HINT: If unsure on information matrices, research it in the context of the Mahalanobis distance.
     """
     # ------- start solution ---------------------------------
-    raise NotImplementedError("Implement build_information_matrices() in gicp.py")
+    information_matrices = np.zeros_like(source_covariances_target_frame)
+    target_indices = np.asarray(target_indices).reshape(-1)
+    valid_mask = np.asarray(valid_mask).reshape(-1)
+
+    for i in range(len(source_covariances_target_frame)):
+        if valid_mask[i]:
+            target_index = target_indices[i]
+            summed_cov = source_covariances_target_frame[i] + target_covariances[target_index]
+            information_matrices[i] = np.linalg.inv(summed_cov)
+
+    return information_matrices
     # ------- end solution -----------------------------------
 
 
