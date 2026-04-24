@@ -1,0 +1,16 @@
+name: amr_p4b
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - scipy
+  - matplotlib
+  - jupyter
+  - tqdm
+  - pip:
+    - gtsam-develop 
+    - rosbags
+    - open3d
