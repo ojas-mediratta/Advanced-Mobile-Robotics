@@ -1,0 +1,39 @@
+extrinsic_imu2base_quat_xyzw_xyz:
+- 0.0
+- 0.0
+- 0.0
+- 1.0
+- -0.006253
+- 0.011775
+- -0.007645
+extrinsic_lidar2base_quat_xyzw_xyz:
+- 0.0
+- 0.0
+- 0.0
+- 1.0
+- 0.0
+- 0.0
+- 0.0
+viz: true
+viz_every_n_frames: 20
+dump_deskewed_scans: false
+log_dir: /Users/matt/Downloads/rko_lio/results
+run_name: bruin_plaza
+lio:
+  deskew: true
+  max_iterations: 100
+  voxel_size: 1.0
+  max_points_per_voxel: 20
+  max_range: 100.0
+  min_range: 1.0
+  convergence_criterion: 1.0e-05
+  max_correspondance_distance: 0.5
+  max_num_threads: 0
+  initialization_phase: false
+  max_expected_jerk: 3.0
+  double_downsample: true
+  min_beta: 200.0
+timestamps:
+  multiplier_to_seconds: 0.0
+  force_absolute: false
+  force_relative: false
