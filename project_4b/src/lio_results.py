@@ -32,7 +32,21 @@ def build_global_map(
     # Each keyframe cloud lives in the LiDAR frame at that keyframe.
     # Use lidar_pose_from_navstate(keyframe.navstate) to get the world pose,
     # transform every cloud into the world frame, and return one stacked Nx3 array.
-    raise NotImplementedError()
+    world_clouds: list[np.ndarray] = []
+    for keyframe in keyframes:
+        if len(keyframe.cloud) == 0:
+            continue
+
+        world_T_lidar = lidar_pose_from_navstate(keyframe.navstate)
+        rotation = np.asarray(world_T_lidar.rotation().matrix(), dtype=float)
+        translation = np.asarray(world_T_lidar.translation(), dtype=float)
+
+        cloud_world = (rotation @ keyframe.cloud.T).T + translation
+        world_clouds.append(cloud_world)
+
+    if not world_clouds:
+        return np.zeros((0, 3), dtype=float)
+    return np.vstack(world_clouds)
     # STUDENT TODO END: implement map-stitching with optimized poses.
 
 

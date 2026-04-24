@@ -190,7 +190,15 @@ class BaseLidarImuSlam:
         # 3. If dt_sec is too small, return without integrating.
         # 4. Otherwise, call integrateMeasurement(...) using the current IMU
         #    linear acceleration, angular velocity, and dt_sec.
-        raise NotImplementedError()
+        dt_sec = imu.timestamp_sec - latest_imu_timestamp_sec
+        self.latest_imu_timestamp_sec = imu.timestamp_sec
+        if dt_sec < min_preintegration_dt_sec:
+            return
+        preintegrator.integrateMeasurement(
+            imu.linear_acceleration,
+            imu.angular_velocity,
+            dt_sec,
+        )
         # STUDENT TODO END: implement the IMU-handling.
     
     def add_imu_factor(
@@ -223,7 +231,13 @@ class BaseLidarImuSlam:
         # STUDENT TODO START: add a gtsam.ImuFactor2 to the factor graph between 
         # the previous and current state. Use the previous keyframe's bias and the 
         # active preintegrator.
-        raise NotImplementedError()
+        imu_factor = gtsam.ImuFactor2(
+            previous_keyframe.state_key,
+            current_state_key,
+            previous_keyframe.bias_key,
+            preintegrator,
+        )
+        graph.add(imu_factor)
         # STUDENT TODO END: implement IMU-factor insertion into the factor graph.
     
     def add_bias_evolution_factor(
@@ -259,7 +273,30 @@ class BaseLidarImuSlam:
         # 6. Use a zero-valued ConstantBias as the measurement, because this
         #    factor models "bias_j is close to bias_i" rather than a known
         #    nonzero change.
-        raise NotImplementedError()
+        dt_sec = current_timestamp_sec - previous_keyframe.timestamp_sec
+        dt_sec = max(dt_sec, min_preintegration_dt_sec)
+
+        accel_interval_sigma = accel_rw_sigma * np.sqrt(dt_sec)
+        gyro_interval_sigma = gyro_rw_sigma * np.sqrt(dt_sec)
+
+        rw_sigmas = np.array([
+                accel_interval_sigma,accel_interval_sigma,accel_interval_sigma,
+                gyro_interval_sigma,gyro_interval_sigma,gyro_interval_sigma,],
+            dtype=float,
+        )
+        minimum_sigmas = np.asarray(bias_between_sigmas, dtype=float)
+        sigmas = np.maximum(rw_sigmas, minimum_sigmas)
+
+        noise_model = gtsam.noiseModel.Diagonal.Sigmas(sigmas)
+        zero_bias_delta = gtsam.imuBias.ConstantBias()
+        graph.add(
+            gtsam.BetweenFactorConstantBias(
+                previous_keyframe.bias_key,
+                current_bias_key,
+                zero_bias_delta,
+                noise_model,
+            )
+        )
         # STUDENT TODO END: implement the bias-evolution factor body.
     
     def predict_navstate_from_preintegration(
@@ -269,7 +306,10 @@ class BaseLidarImuSlam:
         preintegrator = self.preintegrator
         # STUDENT TODO START: implement preintegration prediction.
         # Use the current preintegrator and the previous keyframe to predict the next gtsam.NavState.
-        raise NotImplementedError()
+        return preintegrator.predict(
+            previous_keyframe.navstate,
+            previous_keyframe.bias,
+        )
         # STUDENT TODO END: implement preintegration prediction.
     
     def pointcloud2_to_xyz(self, msg) -> np.ndarray:

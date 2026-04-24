@@ -34,7 +34,9 @@ class BatchLidarImuSlam(BaseLidarImuSlam):
         # STUDENT TODO START: implement initialization for a nonlinear factor graph.
         # Use self.add_initial_priors() to add the initial priors to self.graph and insert 
         # the initial state and bias into self.values.
-        raise NotImplementedError()
+        self.add_initial_priors(self.graph, state_key, bias_key, navstate, bias)
+        self.values.insert(state_key, navstate)
+        self.values.insert(bias_key, bias)
         # STUDENT TODO END: implement initialization for a nonlinear factor graph.
 
     def process_lidar_keyframe(
@@ -53,7 +55,34 @@ class BatchLidarImuSlam(BaseLidarImuSlam):
         # 3. Insert predicted values into self.values.
         # 4. Run batch optimization with self.optimize_batch_graph() and record the update time
         #    by appending a float number of seconds to self.update_times_sec (use perf_counter()).
-        raise NotImplementedError()
+        current_state_key = X(current_index)
+        current_bias_key = B(current_index)
+
+        self.add_imu_factor(
+            self.graph,
+            previous_keyframe,
+            current_state_key,
+            predicted_state=predicted_state,
+        )
+        self.add_lidar_factor(
+            self.graph,
+            previous_keyframe,
+            current_state_key,
+            relative_lidar_pose,
+        )
+        self.add_bias_evolution_factor(
+            self.graph,
+            previous_keyframe,
+            lidar.timestamp_sec,
+            current_bias_key,
+        )
+
+        self.values.insert_or_assign(current_state_key, predicted_state)
+        self.values.insert_or_assign(current_bias_key, previous_keyframe.bias)
+
+        start_time = perf_counter()
+        self.values = self.optimize_batch_graph(self.graph, self.values)
+        self.update_times_sec.append(perf_counter() - start_time)
         # STUDENT TODO END: implement the core batch update for one new keyframe.
 
         self.refresh_keyframe_estimates()
@@ -93,7 +122,10 @@ class BatchLidarImuSlam(BaseLidarImuSlam):
         # STUDENT TODO START: implement optimization over a factor graph.
         # Configure a LevenbergMarquardtOptimizer with max_iterations and 
         # return the optimized Values.
-        raise NotImplementedError()
+        params = gtsam.LevenbergMarquardtParams()
+        params.setMaxIterations(max_iterations)
+        optimizer = gtsam.LevenbergMarquardtOptimizer(graph, values, params)
+        return optimizer.optimize()
         # STUDENT TODO END: implement optimization over a factor graph.
 
     def apply_backend_update(

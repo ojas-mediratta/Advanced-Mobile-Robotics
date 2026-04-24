@@ -31,7 +31,10 @@ class Isam2LidarImuSlam(BaseLidarImuSlam):
         # Use self.add_initial_priors() to add the initial priors to 
         # self.pending_graph, insert the initial state and bias into 
         # self.pending_values, then call self.update_isam2().
-        raise NotImplementedError()
+        self.add_initial_priors(self.pending_graph, state_key, bias_key, navstate, bias)
+        self.pending_values.insert(state_key, navstate)
+        self.pending_values.insert(bias_key, bias)
+        self.update_isam2()
         # STUDENT TODO END: implement ISAM2 initialization.
 
     def run(self) -> LioSlamResult:
@@ -54,7 +57,31 @@ class Isam2LidarImuSlam(BaseLidarImuSlam):
         #    self.add_lidar_factor(), self.add_bias_evolution_factor()).
         # 3. Insert predicted values in self.pending_values.
         # 4. Update ISAM2 with self.update_isam2().
-        raise NotImplementedError()
+        current_state_key = X(current_index)
+        current_bias_key = B(current_index)
+
+        self.add_imu_factor(
+            self.pending_graph,
+            previous_keyframe,
+            current_state_key,
+            predicted_state=predicted_state,
+        )
+        self.add_lidar_factor(
+            self.pending_graph,
+            previous_keyframe,
+            current_state_key,
+            relative_lidar_pose,
+        )
+        self.add_bias_evolution_factor(
+            self.pending_graph,
+            previous_keyframe,
+            lidar.timestamp_sec,
+            current_bias_key,
+        )
+
+        self.pending_values.insert_or_assign(current_state_key, predicted_state)
+        self.pending_values.insert_or_assign(current_bias_key, previous_keyframe.bias)
+        self.update_isam2()
         # STUDENT TODO END: implement the core ISAM2 update for one new keyframe.
 
         estimate = self.isam2.calculateEstimate()
@@ -89,7 +116,11 @@ class Isam2LidarImuSlam(BaseLidarImuSlam):
         # append the elapsed time in seconds to self.update_times_sec 
         # (use perf_counter()), then clear both self.pending_graph and 
         # self.pending_values for next update.
-        raise NotImplementedError()
+        start_time = perf_counter()
+        self.isam2.update(self.pending_graph, self.pending_values)
+        self.update_times_sec.append(perf_counter() - start_time)
+        self.pending_graph = gtsam.NonlinearFactorGraph()
+        self.pending_values = gtsam.Values()
         # STUDENT TODO END: implement ISAM2 update.
 
     def apply_backend_update(
